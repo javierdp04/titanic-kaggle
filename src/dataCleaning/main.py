@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 
-train_data = pd.read_csv('../../data/train.csv')
-test_data = pd.read_csv('/kaggle/input/competitions/titanic/test.csv')
-
-
-
-train_data['Age'].fillna(train_data['Age'].mean())
+def clean_data(trainData : pd.DataFrame):
+    trainData['Age'] = trainData['Age'].fillna(trainData['Age'].median())
+    trainData['Embarked'] = trainData['Embarked'].fillna('S')
+    return trainData.drop(labels=['Cabin'])
