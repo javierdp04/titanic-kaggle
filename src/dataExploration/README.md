@@ -29,6 +29,11 @@ There are several missing values on Age column and the majority of Cabin values 
 * Parch:
     - I suspect there may be some outliers on the max Parch
 
+* Pclass :
+- Approx. 24.65% of 3rd class voyagers survived
+- Approx. 48.39% of 2nd class voyagers survived
+- Approx. 63.68% of 1st class voyagers survived
+
 ### Categorical features
 
 * Cabin : 
@@ -37,11 +42,6 @@ There are several missing values on Age column and the majority of Cabin values 
 * Sex : 
     - Approx. 72.88% of women survived
     - Approx. 19.45% of men survived
-
-* Pclass :
-    - Approx. 24.65% of 3rd class voyagers survived
-    - Approx. 48.39% of 2nd class voyagers survived
-    - Approx. 63.68% of 1st class voyagers survived
 
 * Embarked :
     - Approx. 34.01% of voyagers that departure from Southampton survived.
