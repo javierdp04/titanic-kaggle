@@ -20,9 +20,6 @@ There are several missing values on Age column and the majority of Cabin values 
     - 50% of the people were between 20.12 yo and 38 yo.
     - I suspect there may be some outliers on the max age.
 
-* Cabin : 
-    - There is a strong correlation between the stateroom floor and Survived column
-
 * Fare :
     - I suspect there may be some outliers on the max fare. There is also a possible inconsistency on the min value (min = 0).
 
@@ -33,6 +30,9 @@ There are several missing values on Age column and the majority of Cabin values 
     - I suspect there may be some outliers on the max Parch
 
 ### Categorical features
+
+* Cabin : 
+    - There is a strong correlation between the stateroom floor and Survived column
 
 * Sex : 
     - Approx. 72.88% of women survived
