@@ -6,23 +6,18 @@ columnsToEncode = ['Sex', 'Embarked']
 columnsToZScale= ['Age', 'Fare']
 columnsToLogScale = ['Fare']
 
-def transformData(trainData, testData):
-
-    encodedTrainData, encodedTestData = oneHotEncode(trainData, testData, columnsToEncode)
-
+def transformData(trainData):
+    encodedTrainData = oneHotEncode(trainData, columnsToEncode)
     scaledTrainData = logScale(encodedTrainData, columnsToLogScale)
-    scaledTestData = logScale(encodedTestData, columnsToLogScale)
-
-    scaledTrainData[columnsToZScale], scaledTestData[columnsToZScale] = zScale(scaledTrainData, scaledTestData, columnsToZScale)
-
-    return scaledTrainData, scaledTestData
+    scaledTrainData[columnsToZScale] = zScale(scaledTrainData, columnsToZScale)
+    return scaledTrainData
 
 
-def oneHotEncode(trainData, testData, columnsToEncode):
+def oneHotEncode(trainData, columnsToEncode):
     encoder = OneHotEncoder(sparse_output=False)    
     encoder.fit(trainData[columnsToEncode])
 
-    return _applyEncoder(trainData, encoder, columnsToEncode), _applyEncoder(testData, encoder, columnsToEncode)
+    return _applyEncoder(trainData, encoder, columnsToEncode)
 
 def _applyEncoder(data, encoder, columnsToEncode):
     df_cod = pd.DataFrame(
@@ -32,25 +27,12 @@ def _applyEncoder(data, encoder, columnsToEncode):
         )
     return pd.concat([data.drop(columns=columnsToEncode), df_cod], axis=1)
 
-def zScale(trainData, testData, columnsToScale):
+def zScale(trainData, columnsToScale):
     scaler = StandardScaler().fit(trainData[columnsToScale])
-    return scaler.transform(trainData[columnsToScale]), scaler.transform(testData[columnsToScale])
+    return scaler.transform(trainData[columnsToScale])
 
 def logScale(data, columnsToScale):
     data = data.copy()
     for column in columnsToScale:
         data[column] = np.log1p(data[column])
     return data
-
-
-
-
-
-
-
-
-
-    
-    
-
-
