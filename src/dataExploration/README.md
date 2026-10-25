@@ -97,7 +97,7 @@ The first approach is going to be:
 
 ## How am I treating outliers
 
-As the test data also contains some outliers between 75% and max value I am maintaining the outliers.
+As the outliners don't look as errors I will maintain them.
 
 ## How am I treating errors.
 
