@@ -56,25 +56,27 @@ def build_main_model():
     return main_pipeline   
 
 if __name__ == '__main__':
-    trainData = pd.read_csv(DATA_DIR / 'train.csv')
+    trainData = pd.read_csv(DATA_DIR / 'train.csv').copy()
     
-    X = trainData.drop(columns=['Survived']).copy()
-    y = trainData['Survived'].copy()
+    X = trainData.drop(columns=['Survived'])
+    y = trainData['Survived']
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=0)
 
     main_pipeline = build_main_model()
     param_grid = [
         {
-            "classifier__n_estimators": [500, 700, 1000],
-            "classifier__max_depth": [None, 5, 10, 20],
-            "classifier__min_samples_split": [2, 5, 10],
-            "classifier__min_samples_leaf": [1, 2, 4],
-            "classifier__max_features": ["sqrt", "log2", 0.5, 0.75],
+            "classifier__n_estimators": [450, 463, 475, 487, 500, 510],
+            "classifier__max_depth": [7, 8, 9, 10, 11],
+            "classifier__min_samples_split": [2, 3, 4],
+            "classifier__min_samples_leaf": [1, 2, 3],
+            "classifier__max_features": [3, 4, 5],
         }
     ]
-    grid_search = GridSearchCV(main_pipeline, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
-    n_fits = len(ParameterGrid(param_grid)) * 10
+
+    cv = 5
+    grid_search = GridSearchCV(main_pipeline, param_grid, cv=cv, scoring='accuracy', n_jobs=-1)
+    n_fits = len(ParameterGrid(param_grid)) * cv
     with tqdm_joblib(tqdm(total=n_fits, desc="Ajustando hiperparametros")):
         grid_search.fit(X_train, y_train)
 
