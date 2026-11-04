@@ -66,11 +66,11 @@ if __name__ == '__main__':
     main_pipeline = build_main_model()
     param_grid = [
         {
-            "classifier__n_estimators": [450, 463, 475, 487, 500, 510],
-            "classifier__max_depth": [7, 8, 9, 10, 11],
+            "classifier__n_estimators": [50, 100, 200, 300, 400, 500],
+            "classifier__max_depth": [1, 5, 10, 15],
             "classifier__min_samples_split": [2, 3, 4],
-            "classifier__min_samples_leaf": [1, 2, 3],
-            "classifier__max_features": [3, 4, 5],
+            "classifier__min_samples_leaf": [None, 1, 2, 3, 4],
+            "classifier__max_features": [0.5, 0.75, 1, 2, 4],
         }
     ]
 
