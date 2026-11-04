@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, FunctionTransformer
-from imputingModels.KNNForEmbarked.src.main import KNNEmbarkedImputer
+from src.imputingModels.KNNForEmbarked.src.main import KNNEmbarkedImputer
 from tqdm import tqdm
 from tqdm_joblib import tqdm_joblib
 
@@ -20,7 +20,7 @@ CATEGORICAL_COLS = ['Sex', 'SibSp', 'Pclass', 'Parch']
 
 DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
 
-def build_main_model():
+def build_main_model(n_estimators=100, max_depth=5, min_samples_leaf=1, max_features=0.75):
     numerical_pipeline = Pipeline([
     ("imputer", SimpleImputer(strategy='median')),
         ("normalization", StandardScaler())
@@ -51,7 +51,13 @@ def build_main_model():
 
     main_pipeline = Pipeline([
         ("preprocessing", preprocessing_transformer),
-        ("classifier", RandomForestClassifier(random_state=0))
+        ("classifier", RandomForestClassifier(
+            random_state=0, 
+            n_estimators=n_estimators, 
+            max_depth=max_depth,  
+            min_samples_leaf=min_samples_leaf,
+            max_features=max_features  
+        ))
     ])
     return main_pipeline   
 
@@ -63,26 +69,31 @@ if __name__ == '__main__':
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=0)
 
-    main_pipeline = build_main_model()
-    param_grid = [
-        {
-            "classifier__n_estimators": [50, 100, 200, 300, 400, 500],
-            "classifier__max_depth": [1, 5, 10, 15],
-            "classifier__min_samples_split": [2, 3, 4],
-            "classifier__min_samples_leaf": [None, 1, 2, 3, 4],
-            "classifier__max_features": [0.5, 0.75, 1, 2, 4],
-        }
-    ]
+    # main_pipeline = build_main_model()
+    # param_grid = [
+    #     {
+    #         "classifier__n_estimators": [300, 400, 500],
+    #         "classifier__max_depth": [1, 3, 5, 7],
+    #         "classifier__min_samples_leaf": [1, 2, 3, 4],
+    #         "classifier__max_features": [0.25, 0.5, 0.75, 1.0, "sqrt"],
+    #     }
+    # ]
 
-    cv = 5
-    grid_search = GridSearchCV(main_pipeline, param_grid, cv=cv, scoring='accuracy', n_jobs=-1)
-    n_fits = len(ParameterGrid(param_grid)) * cv
-    with tqdm_joblib(tqdm(total=n_fits, desc="Ajustando hiperparametros")):
-        grid_search.fit(X_train, y_train)
+    # cv = 5
+    # grid_search = GridSearchCV(main_pipeline, param_grid, cv=cv, scoring='accuracy', n_jobs=-1)
+    # n_fits = len(ParameterGrid(param_grid)) * cv
+    # with tqdm_joblib(tqdm(total=n_fits, desc="Ajustando hiperparametros")):
+    #     grid_search.fit(X_train, y_train)
 
-    print("Mejores parámetros:", grid_search.best_params_)
-    print("Mejor score CV:", grid_search.best_score_)
-    y_predict = grid_search.predict(X_test)
+    # print("Mejores parámetros:", grid_search.best_params_)
+    # print("Mejor score CV:", grid_search.best_score_)
+    # y_predict = grid_search.predict(X_test)
+    # print("Resultado en el test", accuracy_score(y_test, y_predict))
+
+    main_pipeline = build_main_model(n_estimators=500, max_depth=7, max_features=0.75, min_samples_leaf=1)
+    main_pipeline.fit(X_train, y_train)
+    y_predict = main_pipeline.predict(X_test)
     print("Resultado en el test", accuracy_score(y_test, y_predict))
+
 
 
