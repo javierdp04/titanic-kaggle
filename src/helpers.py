@@ -30,4 +30,4 @@ def anova_test(data, categoricaVar, numericalVar, alpha):
 def are_there_outliers(data, variable):
     q1, q3 = data[variable].quantile([0.25, 0.75])
     iqr = q3 - q1
-    return (data[variable] < q1 - 1.5 * iqr) | (data[variable] > q3 + 1.5 * iqr).any()
+    return ((data[variable] < q1 - 1.5 * iqr) | (data[variable] > q3 + 1.5 * iqr)).any()

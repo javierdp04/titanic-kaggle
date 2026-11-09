@@ -1,6 +1,9 @@
 from src.main import build_main_model, DATA_DIR
 import pandas as pd
 import numpy as np
+from pathlib import Path
+
+OUTPUT_PATH = Path(__file__).resolve().parent / "submission.csv"
 
 if __name__ == '__main__':
     train_data = pd.read_csv(DATA_DIR / 'train.csv').copy()
@@ -17,5 +20,5 @@ if __name__ == '__main__':
     "PassengerId": test_data["PassengerId"],
     "Survived": main_pipeline.predict(test_data),
     })
-    submission.to_csv("submission.csv", index=False)
+    submission.to_csv(OUTPUT_PATH, index=False)
 
